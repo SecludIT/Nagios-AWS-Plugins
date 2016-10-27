@@ -183,6 +183,12 @@ opts.each { |opt, arg|
           elb_endpoint = "elasticloadbalancing.us-east-1.amazonaws.com"
           cloudwatch_endpoint = "monitoring.us-east-1.amazonaws.com"
           region = "us-east-1"
+        when /us-east-2/
+          ec2_endpoint = "ec2.us-east-2.amazonaws.com"
+          rds_endpoint = "rds.us-east-2.amazonaws.com"
+          elb_endpoint = "elasticloadbalancing.us-east-2.amazonaws.com"
+          cloudwatch_endpoint = "monitoring.us-east-2.amazonaws.com"
+          region = "us-east-2"
         when /us-west-1/
           ec2_endpoint = "ec2.us-west-1.amazonaws.com"
           rds_endpoint = "rds.us-west-1.amazonaws.com"
