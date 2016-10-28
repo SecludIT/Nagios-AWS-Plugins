@@ -344,7 +344,7 @@ begin
     aws_api = Fog::AWS::ELB.new(:aws_access_key_id => access_key_id, :aws_secret_access_key => secret_access_key, :region => region)
   end
 rescue Exception => e
-  puts "Error occured while trying to connect to AWS Endpoint: " + e
+  puts "Error occured while trying to connect to AWS Endpoint: #{e}"
   exit NAGIOS_CODE_CRITICAL
 end
 
@@ -397,7 +397,7 @@ begin
     end
   end
 rescue Exception => e
-  puts "Error occured while trying to retrieve AWS instance: " + e
+  puts "Error occured while trying to retrieve AWS instance: #{e}"
   exit NAGIOS_CODE_CRITICAL
 end
 
@@ -444,7 +444,7 @@ end
 begin
   cloudwatch = Fog::AWS::CloudWatch.new( :aws_access_key_id => access_key_id, :aws_secret_access_key => secret_access_key, :region => region )
 rescue Exception => e
-  puts "Error occured while trying to connect to CloudWatch server: " + e
+  puts "Error occured while trying to connect to CloudWatch server: #{e}"
   exit NAGIOS_CODE_CRITICAL
 end
 
@@ -468,7 +468,7 @@ begin
                                                                #:custom_unit => 'Percent',
                                                                "Dimensions" => dimensions ).data[:body]
 rescue Exception => e
-  puts "Error occured while trying to retrieve CloudWatch metrics statistics: " + e
+  puts "Error occured while trying to retrieve CloudWatch metrics statistics: #{e}"
   exit NAGIOS_CODE_CRITICAL
 end
 
