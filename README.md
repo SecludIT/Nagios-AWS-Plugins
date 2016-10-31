@@ -22,7 +22,7 @@ NB: Amazon CloudWatch Namespaces, Dimensions, and Metrics Reference: http://docs
 ## Contributing
 
 1. Create your fork by clicking Fork button on top of the page.
-2. Download your repository: `git clone https://github.com/USER/cloudwatch-collectd-plugin.git`
+2. Download your repository: `git clone https://github.com/SecludIT/Nagios-AWS-Plugins.git`
 2. Create your feature branch: `git checkout -b my-new-feature`
 3. Commit your changes: `git commit -am 'My new feature description'`
 4. Push to the branch: `git push origin my-new-feature`
