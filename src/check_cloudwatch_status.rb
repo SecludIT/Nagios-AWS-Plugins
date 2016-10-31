@@ -35,11 +35,13 @@ AWS_NAMESPACE_EC2 = "AWS/EC2"
 AWS_NAMESPACE_EBS = "AWS/EBS"
 AWS_NAMESPACE_ELB = "AWS/ELB"
 AWS_NAMESPACE_RDS = "AWS/RDS"
+AWS_NAMESPACE_ELASTICACHE = "AWS/ElastiCache"
 
 EC2_METRIC_TYPE = "ec2-metric"
 EBS_METRIC_TYPE = "ebs-metric"
 ELB_METRIC_TYPE = "elb-metric"
 RDS_METRIC_TYPE = "rds-metric"
+ELASTICACHE_METRIC_TYPE = "elasticache-metric"
 
 NAGIOS_CODE_OK = 0		# UP
 NAGIOS_CODE_WARNING = 1		# UP or DOWN/UNREACHABLE*
@@ -59,6 +61,7 @@ secret_access_key = ''
 ec2_endpoint = ''
 rds_endpoint = ''
 elb_endpoint = ''
+elasticache_endpoint = ''
 cloudwatch_endpoint = ''
 region = ''
 address = ''
@@ -78,20 +81,22 @@ available = ''
 
 
   def display_menu
-    puts "Usage: #{$0} [-v] -s <server> -h <host> -c <credentials>"
-    puts "  --help, -h:            This Help"
-    puts "  --verbose, -v:         Enable verbose mode"
-    puts "  --address, -a:         Amazon Instance Address"
-    puts "  --instance_id, -i:     Amazon Instance ID"
-    puts "  --credential_file, -f: Path to a File containing the Amazon EC2 Credentials"
-    puts "  --ec2-metric, -C:      One of Amazon EC2 Metrics"
-    puts "                         (CPUUtilization, NetworkIn, NetworkOut, DiskWriteOps, DiskReadBytes, DiskReadOps, DiskWriteBytes, ...)"
-    puts "  --elb-metric, -L:      One fo Amazon Load Balancing Metrics"
-    puts "                         (Latency, RequestCount, HealthyHostCount, UnHealthyHostCount, ...)"
-    puts "  --rds-metric, -D:      One of Amazon RDS Metrics"
-    puts "                         (CPUUtilization, FreeStorageSpace, DatabaseConnections, ReadIOPS, WriteIOPS, ReadLatency, WriteLatency,"
-    puts "                         ReadThroughput, WriteThroughput, ...)"
-    puts "  --stat, -S:            Amazon Statistic used for threshold and ranges (Average, Sum, SampleCount, Maximum, Minimum)"
+    puts "Usage: #{$0} [-v] -a <address> -i <instance_id> -f <credentials>"
+    puts "  --help, -h:               This Help"
+    puts "  --verbose, -v:            Enable verbose mode"
+    puts "  --address, -a:            Amazon Object (Instance, Database, LoadBalancer, Cluster) Address or Region"
+    puts "  --instance_id, -i:        Amazon Object ID (Instance, Database, LoadBalancer, Cluster) Identifier"
+    puts "  --credential_file, -f:    Path to a File containing the Amazon EC2 Credentials"
+    puts "  --ec2-metric, -C:         One of Amazon EC2 Metrics"
+    puts "                            (CPUUtilization, NetworkIn, NetworkOut, DiskWriteOps, DiskReadBytes, DiskReadOps, DiskWriteBytes, ...)"
+    puts "  --elb-metric, -L:         One fo Amazon Load Balancing Metrics"
+    puts "                            (Latency, RequestCount, HealthyHostCount, UnHealthyHostCount, ...)"
+    puts "  --rds-metric, -D:         One of Amazon RDS Metrics"
+    puts "                            (CPUUtilization, FreeStorageSpace, DatabaseConnections, ReadIOPS, WriteIOPS, ReadLatency, WriteLatency,"
+    puts "                            ReadThroughput, WriteThroughput, ...)"
+    puts "  --elasticache-metric, -M: One of Amazon ElastiCache Metrics"
+    puts "                            (CPUUtilization, FreeableMemory, NetworkBytesIn, NetworkBytesOut, SwapUsage)"
+    puts "  --stat, -S:               Amazon Statistic used for threshold and ranges (Average, Sum, SampleCount, Maximum, Minimum)"
     exit NAGIOS_CODE_UNKNOWN
   end
 
@@ -157,6 +162,7 @@ opts.set_options(
 	[ "--ec2-metric", "-C", GetoptLong::OPTIONAL_ARGUMENT], \
 	[ "--elb-metric", "-L", GetoptLong::OPTIONAL_ARGUMENT], \
 	[ "--rds-metric", "-D", GetoptLong::OPTIONAL_ARGUMENT], \
+	[ "--elasticache-metric", "-M", GetoptLong::OPTIONAL_ARGUMENT], \
 	[ "--stat", "-S", GetoptLong::OPTIONAL_ARGUMENT], \
 	[ "--warning", "-w", GetoptLong::OPTIONAL_ARGUMENT], \
 	[ "--critical", "-c", GetoptLong::OPTIONAL_ARGUMENT] )
@@ -181,42 +187,49 @@ opts.each { |opt, arg|
           ec2_endpoint = "ec2.us-east-1.amazonaws.com"
           rds_endpoint = "rds.us-east-1.amazonaws.com"
           elb_endpoint = "elasticloadbalancing.us-east-1.amazonaws.com"
+          elasticache_endpoint = "elasticache.us-east-1.amazonaws.com"
           cloudwatch_endpoint = "monitoring.us-east-1.amazonaws.com"
           region = "us-east-1"
         when /us-east-2/
           ec2_endpoint = "ec2.us-east-2.amazonaws.com"
           rds_endpoint = "rds.us-east-2.amazonaws.com"
           elb_endpoint = "elasticloadbalancing.us-east-2.amazonaws.com"
+          elasticache_endpoint = "elasticache.us-east-2.amazonaws.com"
           cloudwatch_endpoint = "monitoring.us-east-2.amazonaws.com"
           region = "us-east-2"
         when /us-west-1/
           ec2_endpoint = "ec2.us-west-1.amazonaws.com"
           rds_endpoint = "rds.us-west-1.amazonaws.com"
           elb_endpoint = "elasticloadbalancing.us-west-1.amazonaws.com"
+          elasticache_endpoint = "elasticache.us-west-1.amazonaws.com"
           cloudwatch_endpoint = "monitoring.us-west-1.amazonaws.com"
           region = "us-west-1"
         when /us-west-2/
           ec2_endpoint = "ec2.us-west-2.amazonaws.com"
           rds_endpoint = "rds.us-west-2.amazonaws.com"
           elb_endpoint = "elasticloadbalancing.us-west-2.amazonaws.com"
+          elasticache_endpoint = "elasticache.us-west-2.amazonaws.com"
           cloudwatch_endpoint = "monitoring.us-west-2.amazonaws.com"
           region = "us-west-2"  
         when /eu-west-1/
           ec2_endpoint = "ec2.eu-west-1.amazonaws.com"
           rds_endpoint = "rds.eu-west-1.amazonaws.com"
           elb_endpoint = "elasticloadbalancing.eu-west-1.amazonaws.com"
+          elasticache_endpoint = "elasticache.eu-west-1.amazonaws.com"
           cloudwatch_endpoint = "monitoring.eu-west-1.amazonaws.com"
           region = "eu-west-1"
         when /eu-central-1/
           ec2_endpoint = "ec2.eu-central-1.amazonaws.com"
           rds_endpoint = "rds.eu-central-1.amazonaws.com"
           elb_endpoint = "elasticloadbalancing.eu-central-1.amazonaws.com"
+          elasticache_endpoint = "elasticache.eu-central-1.amazonaws.com"
           cloudwatch_endpoint = "monitoring.eu-central-1.amazonaws.com"
           region = "eu-central-1"
         when /ap-south-1/
           ec2_endpoint = "ec2.ap-south-1.amazonaws.com"
           rds_endpoint = "rds.ap-south-1.amazonaws.com"
           elb_endpoint = "elasticloadbalancing.ap-south-1.amazonaws.com"
+          elasticache_endpoint = "elasticache.ap-south-1.amazonaws.com"
           cloudwatch_endpoint = "monitoring.ap-south-1.amazonaws.com"
           region = "ap-south-1"
         when /ap-southeast-1/
@@ -229,30 +242,35 @@ opts.each { |opt, arg|
           ec2_endpoint = "ec2.ap-southeast-2.amazonaws.com"
           rds_endpoint = "rds.ap-southeast-2.amazonaws.com"
           elb_endpoint = "elasticloadbalancing.ap-southeast-2.amazonaws.com"
+          elasticache_endpoint = "elasticache.ap-southeast-2.amazonaws.com"
           cloudwatch_endpoint = "monitoring.ap-southeast-2.amazonaws.com"
           region = "ap-southeast-2"
         when /ap-northeast-1/
           ec2_endpoint = "ec2.ap-northeast-1.amazonaws.com"
           rds_endpoint = "rds.ap-northeast-1.amazonaws.com"
           elb_endpoint = "elasticloadbalancing.ap-northeast-1.amazonaws.com"
+          elasticache_endpoint = "elasticache.ap-northeast-1.amazonaws.com"
           cloudwatch_endpoint = "monitoring.ap-northeast-1.amazonaws.com"
           region = "ap-northeast-1"
         when /ap-northeast-2/
           ec2_endpoint = "ec2.ap-northeast-2.amazonaws.com"
           rds_endpoint = "rds.ap-northeast-2.amazonaws.com"
           elb_endpoint = "elasticloadbalancing.ap-northeast-2.amazonaws.com"
+          elasticache_endpoint = "elasticache.ap-northeast-2.amazonaws.com"
           cloudwatch_endpoint = "monitoring.ap-northeast-2.amazonaws.com"
           region = "ap-northeast-2"
         when /sa-east-1/
           ec2_endpoint = "ec2.sa-east-1.amazonaws.com"
           rds_endpoint = "rds.sa-east-1.amazonaws.com"
           elb_endpoint = "elasticloadbalancing.sa-east-1.amazonaws.com"
+          elasticache_endpoint = "elasticache.sa-east-1.amazonaws.com"
           cloudwatch_endpoint = "monitoring.sa-east-1.amazonaws.com"
           region = "sa-east-1"
         else
           ec2_endpoint = "ec2.us-east-1.amazonaws.com"
           rds_endpoint = "rds.us-east-1.amazonaws.com"
           elb_endpoint = "elasticloadbalancing.us-east-1.amazonaws.com"
+          elasticache_endpoint = "elasticache.us-east-1.amazonaws.com"
           cloudwatch_endpoint = "monitoring.amazonaws.com"
           region = "us-east-1"
       end 
@@ -272,6 +290,10 @@ opts.each { |opt, arg|
       metric = arg
       metric_type = RDS_METRIC_TYPE
       namespace = AWS_NAMESPACE_RDS
+    when '--elasticache-metric'
+      metric = arg
+      metric_type = ELASTICACHE_METRIC_TYPE
+      namespace = AWS_NAMESPACE_ELASTICACHE
     when '--stat'
       stat = arg
     # threshold and ranges
@@ -293,6 +315,8 @@ elsif namespace.eql?(AWS_NAMESPACE_RDS)
   dimensions = [{"Name" => "DBInstanceIdentifier", "Value" => instance_id}] # where instance_id = db name
 elsif namespace.eql?(AWS_NAMESPACE_ELB)
   dimensions = [{"Name" => "LoadBalancerName", "Value" => instance_id }] # where instance_id = elb name
+elsif namespace.eql?(AWS_NAMESPACE_ELASTICACHE)
+  dimensions = [{"Name" => "CacheClusterId", "Value" => instance_id }] # where instance_id = cluster id
 end
 
 begin
@@ -327,7 +351,7 @@ end
 
 if verbose == 1
   puts "** Launching AWS status retrieval on instance ID: #{instance_id}"
-  puts "Amazon AWS Endpoint: EC2 #{ec2_endpoint}, RDS #{rds_endpoint}, ELB #{elb_endpoint}"
+  puts "Amazon AWS Endpoint: EC2 #{ec2_endpoint}, RDS #{rds_endpoint}, ELB #{elb_endpoint}, ElastiCache #{elasticache_endpoint}"
   puts "Amazon CloudWatch Endpoint: #{cloudwatch_endpoint}"
   puts "Warning values: #{warning_values.inspect}"
   puts "Critical values: #{critical_values.inspect}"
@@ -342,6 +366,8 @@ begin
     aws_api = Fog::AWS::RDS.new(:aws_access_key_id => access_key_id, :aws_secret_access_key => secret_access_key, :region => region)
   elsif namespace.eql?(AWS_NAMESPACE_ELB)
     aws_api = Fog::AWS::ELB.new(:aws_access_key_id => access_key_id, :aws_secret_access_key => secret_access_key, :region => region)
+  elsif namespace.eql?(AWS_NAMESPACE_ELASTICACHE)
+    aws_api = Fog::AWS::Elasticache.new(:aws_access_key_id => access_key_id, :aws_secret_access_key => secret_access_key, :region => region)
   end
 rescue Exception => e
   puts "Error occured while trying to connect to AWS Endpoint: #{e}"
@@ -395,6 +421,18 @@ begin
       #cloudwatch_enabled = EC2_STATE_ENABLED
       cloudwatch_enabled = EC2_STATE_DISABLING ## disabling
     end
+  elsif namespace.eql?(AWS_NAMESPACE_ELASTICACHE)
+    #ElasticCache
+    instance = aws_api.describe_cache_clusters(instance_id).data[:body]
+    if instance['CacheClusters'].nil? || instance['CacheClusters'].empty?
+      puts "Error occured while retrieving ElastiCache cluster: no cluster found for ID #{instance_id}"
+    else
+      status = instance['CacheClusters'][0]['CacheClusterStatus']
+      if status.eql?("available")
+        state_name = EC2_STATUS_NAME_RUNNING
+      end
+      cloudwatch_enabled = EC2_STATE_DISABLING ## disabling
+    end
   end
 rescue Exception => e
   puts "Error occured while trying to retrieve AWS instance: #{e}"
@@ -408,7 +446,9 @@ if verbose == 1
   elsif namespace.eql?(AWS_NAMESPACE_RDS)
     puts "AWS RDS Instance:"
   elsif namespace.eql?(AWS_NAMESPACE_ELB)
-    puts "AWS ELB Instance:"
+    puts "AWS ELB:"
+  elsif namespace.eql?(AWS_NAMESPACE_ELASTICACHE)
+    puts "AWS ElastiCache Cluster:"
   end
   pp instance
 end
