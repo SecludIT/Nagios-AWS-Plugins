@@ -4,7 +4,7 @@
 #
 # Ruby Gem Name::  secludit-nagios
 # Author:: $Author: $ 
-# Copyright:: 
+# Copyright:: Copyright 2016 SecludIT 
 # License::   Distributes under the same terms as Ruby
 # Home:: $Id: encrypt_credentials.rb 1044 2011-03-04 12:51:53Z  $
 #++

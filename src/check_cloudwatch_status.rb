@@ -4,7 +4,7 @@
 #
 # Ruby Gem Name::  secludit-nagios
 # Author:: $Author: fred $ 
-# Copyright:: 
+# Copyright:: Copyright 2016 SecludIT 
 # License::   Distributes under the same terms as Ruby
 # Home:: $Id: check_cloudwatch_status.rb 42 2010-06-17 15:26:12Z fred $
 #++

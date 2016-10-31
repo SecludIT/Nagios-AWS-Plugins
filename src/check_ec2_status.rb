@@ -4,7 +4,7 @@
 #
 # Ruby Gem Name::  secludit-nagios
 # Author:: $Author: $ 
-# Copyright:: 
+# Copyright:: Copyright 2016 SecludIT 
 # License::   Distributes under the same terms as Ruby
 # Home:: $Id: check_ec2_status.rb 1815 2012-11-27 10:41:12Z  $
 #++
