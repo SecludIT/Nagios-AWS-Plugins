@@ -2,7 +2,7 @@
 
 This repository aims to make available Nagios plugins for Amazon Web Service (AWS) to the DevOps community.
 
-These plugins have been developed by SecludIT and already made available on Nagios-Exchange:
+These plugins have been developed by [SecludIT](https://secludit.com/) and already made available on Nagios-Exchange:
  * Check_AWS_CloudWatch_metrics plugin on Nagios-Exchange: 
    This is a ruby script that retrieve metrics from Amazon Web Service EC2, ELB or RDS using Amazon CloudWatch API (supports all AWS region).
    https://exchange.nagios.org/directory/Plugins/Operating-Systems/%2A-Virtual-Environments/Others/Check_AWS_CloudWatch_metrics/details
@@ -13,11 +13,13 @@ These plugins have been developed by SecludIT and already made available on Nagi
 This is a ruby script that retrieve metrics from Amazon Web Service EC2, ELB or RDS using Amazon CloudWatch API (supports all AWS region).
 The Amazon credentials (Access Key ID and Secret Access Key) are read from an encrypted file.
 
-NB: Amazon CloudWatch Namespaces, Dimensions, and Metrics Reference: http://docs.aws.amazon.com/AmazonCloudWatch/latest/DeveloperGuide/CW_Support_For_AWS.html
+NB: AWS CloudWatch Namespaces, Dimensions, and Metrics Reference: http://docs.aws.amazon.com/AmazonCloudWatch/latest/DeveloperGuide/CW_Support_For_AWS.html
 
-####  CHANGELOG  ####
-##  1.0.0
-  - Initial import the Nagios AWS CloudWatch plugin from SecludIT repository (SVN Rev 6433)
+## Dependency Notice
+
+Currently, these Nagios plugins depend on:
+- Ruby version >= 1.8.7
+- Fog gem version >= 1.25.0
 
 ## Contributing
 
