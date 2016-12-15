@@ -225,6 +225,13 @@ opts.each { |opt, arg|
           elasticache_endpoint = "elasticache.eu-west-1.amazonaws.com"
           cloudwatch_endpoint = "monitoring.eu-west-1.amazonaws.com"
           region = "eu-west-1"
+        when /eu-west-2/
+          ec2_endpoint = "ec2.eu-west-2.amazonaws.com"
+          rds_endpoint = "rds.eu-west-2.amazonaws.com"
+          elb_endpoint = "elasticloadbalancing.eu-west-2.amazonaws.com"
+          elasticache_endpoint = "elasticache.eu-west-2.amazonaws.com"
+          cloudwatch_endpoint = "monitoring.eu-west-2.amazonaws.com"
+          region = "eu-west-2"
         when /eu-central-1/
           ec2_endpoint = "ec2.eu-central-1.amazonaws.com"
           rds_endpoint = "rds.eu-central-1.amazonaws.com"
@@ -232,26 +239,6 @@ opts.each { |opt, arg|
           elasticache_endpoint = "elasticache.eu-central-1.amazonaws.com"
           cloudwatch_endpoint = "monitoring.eu-central-1.amazonaws.com"
           region = "eu-central-1"
-        when /ap-south-1/
-          ec2_endpoint = "ec2.ap-south-1.amazonaws.com"
-          rds_endpoint = "rds.ap-south-1.amazonaws.com"
-          elb_endpoint = "elasticloadbalancing.ap-south-1.amazonaws.com"
-          elasticache_endpoint = "elasticache.ap-south-1.amazonaws.com"
-          cloudwatch_endpoint = "monitoring.ap-south-1.amazonaws.com"
-          region = "ap-south-1"
-        when /ap-southeast-1/
-          ec2_endpoint = "ec2.ap-southeast-1.amazonaws.com"
-          rds_endpoint = "rds.ap-southeast-1.amazonaws.com"
-          elb_endpoint = "elasticloadbalancing.ap-southeast-1.amazonaws.com"
-          cloudwatch_endpoint = "monitoring.ap-southeast-1.amazonaws.com"
-          region = "ap-southeast-1"
-        when /ap-southeast-2/
-          ec2_endpoint = "ec2.ap-southeast-2.amazonaws.com"
-          rds_endpoint = "rds.ap-southeast-2.amazonaws.com"
-          elb_endpoint = "elasticloadbalancing.ap-southeast-2.amazonaws.com"
-          elasticache_endpoint = "elasticache.ap-southeast-2.amazonaws.com"
-          cloudwatch_endpoint = "monitoring.ap-southeast-2.amazonaws.com"
-          region = "ap-southeast-2"
         when /ap-northeast-1/
           ec2_endpoint = "ec2.ap-northeast-1.amazonaws.com"
           rds_endpoint = "rds.ap-northeast-1.amazonaws.com"
@@ -266,6 +253,26 @@ opts.each { |opt, arg|
           elasticache_endpoint = "elasticache.ap-northeast-2.amazonaws.com"
           cloudwatch_endpoint = "monitoring.ap-northeast-2.amazonaws.com"
           region = "ap-northeast-2"
+        when /ap-southeast-1/
+          ec2_endpoint = "ec2.ap-southeast-1.amazonaws.com"
+          rds_endpoint = "rds.ap-southeast-1.amazonaws.com"
+          elb_endpoint = "elasticloadbalancing.ap-southeast-1.amazonaws.com"
+          cloudwatch_endpoint = "monitoring.ap-southeast-1.amazonaws.com"
+          region = "ap-southeast-1"
+        when /ap-southeast-2/
+          ec2_endpoint = "ec2.ap-southeast-2.amazonaws.com"
+          rds_endpoint = "rds.ap-southeast-2.amazonaws.com"
+          elb_endpoint = "elasticloadbalancing.ap-southeast-2.amazonaws.com"
+          elasticache_endpoint = "elasticache.ap-southeast-2.amazonaws.com"
+          cloudwatch_endpoint = "monitoring.ap-southeast-2.amazonaws.com"
+          region = "ap-southeast-2"
+        when /ap-south-1/
+          ec2_endpoint = "ec2.ap-south-1.amazonaws.com"
+          rds_endpoint = "rds.ap-south-1.amazonaws.com"
+          elb_endpoint = "elasticloadbalancing.ap-south-1.amazonaws.com"
+          elasticache_endpoint = "elasticache.ap-south-1.amazonaws.com"
+          cloudwatch_endpoint = "monitoring.ap-south-1.amazonaws.com"
+          region = "ap-south-1"
         when /sa-east-1/
           ec2_endpoint = "ec2.sa-east-1.amazonaws.com"
           rds_endpoint = "rds.sa-east-1.amazonaws.com"
