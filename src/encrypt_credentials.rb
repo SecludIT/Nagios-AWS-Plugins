@@ -76,13 +76,12 @@ if verbose == 1
 end
 
 begin
-  #key_file = "/etc/cloutomate/cloutomate.pem" #TODO: make configurable?
-  key_file = "./key.pem"
+  key_file = "/etc/cloutomate/cloutomate.pem" #TODO: make configurable?
   if use_rsa
     rsa_pubkey = OpenSSL::PKey::RSA.new(File.read(key_file))
 
-    enc_aws_access_key_id = rsa_pubkey.public_encrypt(Base64.encoode(aws_access_key_id))
-    enc_aws_secret_access_key = rsa_pubkey.public_encrypt(Base64.encoode(aws_secret_access_key))
+    enc_aws_access_key_id = Base64.encode64(rsa_pubkey.public_encrypt(aws_access_key_id))
+    enc_aws_secret_access_key = Base64.encode64(rsa_pubkey.public_encrypt(aws_secret_access_key))
   else
     cipher = OpenSSL::Cipher::Cipher.new('bf-cbc')
 
